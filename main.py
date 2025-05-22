@@ -6,6 +6,16 @@ from openai import OpenAI
 
 KEY="ENTER KEY HERE"
 client = OpenAI(api_key=KEY)
+"""
+NOTE: 
+>> pip3 install openai
+
+(if required) Since the inference function you provided an older query function, you might want to use:
+>> openai migrate
+
+Run file
+>> python main.py
+"""
 
 
 """
