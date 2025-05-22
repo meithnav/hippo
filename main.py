@@ -115,13 +115,13 @@ def makeStoryPrompt(outline, suggestions="") -> str:
         - Prevent harmful, foul, horrendous, and lewd language.
         - Positive themes and gentle humor only.
         - Tone: Uplifting, with a clear, gentle lesson.
-
+        
         ##OUTPUT FORMAT:## 
         1. Give a title
         2. Story  
         3. Moral 
         
-        Generate a LONG STORY following the OUTLINE. Be EXTREMELY VERBOSE. Be CREATIVE. 
+        Generate a LONG STORY following the OUTLINE. It would be like a normal flowing story. Be EXTREMELY VERBOSE. Be CREATIVE. 
 
         '''
         
@@ -173,6 +173,11 @@ def main():
             print("--> Saved Story")
             saveJson(story, file_path='./output/story.json')
             print("\nSTORY:",story)
+        else: 
+            print("Good night!!")
+            break
+       
+        NUM_RETRY_ATTEMPTS-=1
 
 
 if __name__ == "__main__":
