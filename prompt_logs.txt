@@ -1,0 +1,197 @@
+The following document entails all the prompts that I tried for the assessment. 
+
+--------------------------------------
+--------------------------------------
+
+1. Naive prompt(baseline)
+
+```
+Generate a STORY for a 5 year old. 
+
+USER INPUT: {user_query}
+
+Structure the story with a clear beginning, middle, and end. 
+
+```
+
+Problems: 
+- limited diversity
+- less reliable: fail to maintain coherence between paragraphs, adherence to user-query
+- subject to halluciantion
+- lack of character development
+- need to add contraints suitable to our target audience 
+
+--------------------------------------
+2. Added:
+(a) Destructure the prompts for better understanding (adherence)
+(b) Add a planning section (coherence) 
+(c) Output format (adherence)
+(d) Precautionary contraints 
+
+```
+##TASK:## 
+Generate a STORY for a **{age} year old** 
+
+##USER QUERY:## 
+{user_query}
+
+
+##PLANNING:##
+- Break down the USER QUERY to understand the actors, their relations, plot, genre. 
+- Structure the story with a clear beginning, middle, and end. 
+- Create dynamic and relatable characters that evolve throughout the story
+- Ensure the story is well-balanced, mixing action, dialogue, and description to maintain interest and momentum.
+
+
+##CONSTRAINTS:## 
+- Story is for 5-10 years old.
+- Length - Around 4000 - 5000 words. 
+- Simple and easy to follow.
+- Prevent harmful, foul, horrendous, and lewd language.
+- Positive themes and gentle humor only.
+- Include a light moral or uplifting lesson.
+
+##OUTPUT FORMAT:## 
+1. Give a title
+2. Story 
+3. Moral 
+
+
+Be VERBOSE. Be CREATIVE. 
+```
+
+
+Problems: 
+- Structure Planning Phase: LLMs follow auto-regressive decoding, components in the Planning phase need to be ordered so that geenration of previous tokens influence the next tokens aptly. 
+
+
+--------------------
+3. Ordering the components of PLANNING
+
+```
+##TASK:## 
+Generate a STORY for a **{age} year old** 
+
+##USER QUERY:## 
+{user_query}
+
+
+##PLANNING:##
+- Break down the USER QUERY to understand the mentioned actors, their relations, plot, genre. 
+- Then create dynamic and relatable characters that evolve throughout the story. 
+- Develop character personas, relatinships, and relatable discriptions.  
+- Chapter Outlines: Structure the story with a clear introduction -> plot setting -> problem ->  difficulties/opportunties -> climax -> ending.  
+- Ensure the story is well-balanced, mixing action, dialogue, and description to maintain interest and momentum.
+- Weave in gentle humor and a light moral
+
+
+##CONSTRAINTS:## 
+- Story is for 5-10 years old.
+- Length - Around 8000 - 10000 words. 
+- Simple and easy to follow.
+- Prevent harmful, foul, horrendous, and lewd language.
+- Positive themes and gentle humor only.
+- Tone: Uplifting, with a clear, gentle lesson.
+
+##OUTPUT FORMAT:## 
+1. Give a title
+2. Story 
+3. Moral 
+
+```
+
+
+Problem: 
+- Symbolic Chapter Outlines makes it static dampening creativity in story plots.
+- Morals generated through the LLMs is not great. Maintain the pool of morals, randomly pick 1 moral and pass it into our prompt.
+- too short story. ~300-500 words
+
+
+Sugestions: 
+- Introduce our custom functions to produce these meta-data instead of relying on LLM. Offers more controllability and reduces inference burden on the LLM. 
+
+--------------------
+4. Divide th prompt into 2 parts: 
+
+Prompt1: returns story outline
+Prompt2: generates the story. 
+
+
+Prompt1: 
+```
+##TASK:## 
+Generate a STORY for a **{age} year old** 
+
+##USER QUERY:## 
+{user_query}
+
+
+##PLANNING:##
+- Break down the USER QUERY to understand the mentioned actors, their relations, plot, genre. 
+- Then create dynamic and relatable characters that evolve throughout the story. 
+- Develop character personas, relatinships, and relatable discriptions.    
+- Ensure the story is well-balanced, mixing action, dialogue, and description to maintain interest and momentum.
+- Weave in gentle humor and a light moral
+
+
+##CONSTRAINTS:## 
+- Story is for 5-10 years old.
+- Length - Around 8000 - 10000 words. 
+- Simple and easy to follow.
+- Prevent harmful, foul, horrendous, and lewd language.
+- Positive themes and gentle humor only.
+- Tone: Uplifting, with a clear, gentle lesson.
+
+
+##OUTPUT FORMAT:## 
+1. Give a title
+2. Chapter Outlines: Structure the story with a clear introduction(500 words) -> plot setting(800 words) -> problem(1000 words) ->  difficulties/opportunties in overcoming(2000 words) -> climax(1000 words) -> ending(500 words).    
+3. Moral 
+
+
+Prompt2: 
+
+```
+##OUTLINE:## 
+{response_prompt1}
+
+
+##CONSTRAINTS:## 
+- Story is for 5-10 years old.
+- Length - Around 8000 - 10000 words. 
+- Simple and easy to follow.
+- Prevent harmful, foul, horrendous, and lewd language.
+- Positive themes and gentle humor only.
+- Tone: Uplifting, with a clear, gentle lesson.
+
+
+Generate a story following the OUTLINE. Be VERBOSE. Be CREATIVE. 
+```
+
+
+--------------------
+
+ADDITIONAL EXPLORATIONS: 
+--------------------
+--------------------
+
+5. Understanding what makes a good story for kids. 
+
+- Moral Lesson
+- Emotional Connection
+- Humor
+- Sense of Wonder
+
+--------------------
+
+6. Does few shot examples help? 
+
+- Make a dictionary of stories for each genres. 
+- Why dictionary? So that the shared example is not a negative sample for the generation. (Avoid Genre mismatch)
+
+Cons: 
+- Increases cost since stories can have ~5-8k tokens
+- LLM draws inspiration from the example. limits creativity. 
+
+----------------------
+
